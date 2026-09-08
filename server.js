@@ -1,0 +1,23 @@
+# Render 部署配置文件
+# 在 Render 控制台选择 "Blueprint" 导入此文件可一键部署
+
+services:
+  - type: web
+    name: meetlingo
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: VOLC_APPID
+        sync: false  # 需要在Render控制台手动填写
+      - key: VOLC_ACCESS_TOKEN
+        sync: false
+      - key: ARK_API_KEY
+        sync: false
+      - key: ARK_MODEL_ENDPOINT_ID
+        sync: false
+    healthCheckPath: /api/health
+    autoDeploy: true

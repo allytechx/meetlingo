@@ -1,0 +1,23 @@
+# 依赖
+node_modules/
+
+# 环境变量（包含密钥，绝不能上传）
+.env
+
+# 会议记录（包含用户隐私，不上传）
+meetings/*.json
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+npm-debug.log*
+
+# 临时文件
+/tmp
+*.tmp
+
+# 二维码（可重新生成）
+qrcode.png
