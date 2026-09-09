@@ -101,24 +101,23 @@ wss.on('connection', (clientWs, req) => {
       return;
     }
 
-    // 构建鉴权URL
-    const url = `${VOLC_AST_URL}?appid=${appid}&access_token=${token}`;
-
     console.log('[Volc] 正在连接同传API...');
-    volcWs = new WebSocket(url, {
+    volcWs = new WebSocket(VOLC_AST_URL, {
       headers: {
-        'X-Api-App-Key': appid
+        'X-Api-App-Key': appid,
+        'X-Api-Access-Key': token,
+        'X-Api-Resource-Id': 'volc.service_type.10053'
       }
     });
 
     volcWs.on('open', () => {
-      console.log('[Volc] 连接已建立，发送StartSession...');
+      console.log('[Volc] WebSocket连接已建立，发送StartSession...');
 
       const startMsg = {
         request_meta: { session_id: sessionId },
-        event: 'StartSession',
+        event: 100,
         user: { uid: 'meetlingo_' + Date.now(), did: 'web' },
-        source_audio: { format: 'wav', rate: 16000, bits: 16, channel: 1 },
+        source_audio: { format: 'wav', codec: 'raw', rate: 16000, bits: 16, channel: 1 },
         target_audio: config.mode === 's2s' ? { format: 'pcm', rate: 24000 } : undefined,
         request: {
           mode: config.mode || 's2t',
@@ -132,16 +131,19 @@ wss.on('connection', (clientWs, req) => {
       };
 
       volcWs.send(JSON.stringify(startMsg));
+      console.log('[Volc] StartSession已发送:', JSON.stringify(startMsg).substring(0, 200));
     });
 
     volcWs.on('message', (volcData) => {
       try {
         // 尝试解析为JSON（控制消息）
         const text = volcData.toString();
+        console.log('[Volc] 收到消息(文本):', text.substring(0, 300));
         const resp = JSON.parse(text);
         handleVolcResponse(resp);
       } catch (e) {
-        // 二进制数据（TTS音频）
+        // 二进制数据（TTS音频或Protobuf）
+        console.log('[Volc] 收到二进制数据, 长度:', volcData.length, '类型:', typeof volcData);
         if (volcData instanceof Buffer || volcData instanceof ArrayBuffer) {
           const base64 = Buffer.from(volcData).toString('base64');
           clientWs.send(JSON.stringify({ type: 'tts_audio', audio: base64 }));
@@ -155,7 +157,7 @@ wss.on('connection', (clientWs, req) => {
     });
 
     volcWs.on('close', (code, reason) => {
-      console.log('[Volc] 连接关闭:', code, reason?.toString());
+      console.log('[Volc] 连接关闭, code:', code, 'reason:', reason?.toString());
     });
   }
 
@@ -267,19 +269,18 @@ wss.on('connection', (clientWs, req) => {
     const audioBuffer = Buffer.from(base64Audio, 'base64');
 
     const taskMsg = {
-      event: 'TaskRequest',
+      event: 200,
       source_audio: { data: audioBuffer }
     };
 
-    // 发送JSON+二进制混合格式
-    // 先发送JSON头，再发送二进制
     volcWs.send(JSON.stringify(taskMsg));
   }
 
   // 结束会话
   function finishSession() {
     if (volcWs && volcWs.readyState === WebSocket.OPEN) {
-      volcWs.send(JSON.stringify({ event: 'FinishSession' }));
+      volcWs.send(JSON.stringify({ event: 102 }));
+      console.log('[Volc] FinishSession已发送');
     }
   }
 
