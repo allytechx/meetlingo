@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>译会 MeetLingo - 会议同传助手</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- ===== 首页 / 会议设置 ===== -->
+    <div id="view-setup" class="view active">
+      <div class="header">
+        <div class="logo">🌐 译会</div>
+        <div class="subtitle">面对面会议 · 实时同传 · AI纪要</div>
+      </div>
+
+      <div class="setup-card">
+        <div class="setup-section">
+          <label class="setup-label">会议名称</label>
+          <input type="text" id="meetingName" class="setup-input" placeholder="例如：与德国客户LVL合作洽谈" value="">
+        </div>
+
+        <div class="setup-section">
+          <label class="setup-label">语言设置</label>
+          <div class="lang-row">
+            <div class="lang-box">
+              <span class="lang-label">对方语言</span>
+              <select id="sourceLang" class="lang-select">
+                <option value="en">英语 English</option>
+                <option value="de">德语 Deutsch</option>
+                <option value="fr">法语 Français</option>
+                <option value="es">西班牙语 Español</option>
+                <option value="ja">日语 日本語</option>
+                <option value="ko">韩语 한국어</option>
+                <option value="ru">俄语 Русский</option>
+                <option value="it">意大利语 Italiano</option>
+                <option value="pt">葡萄牙语 Português</option>
+                <option value="nl">荷兰语 Nederlands</option>
+                <option value="ar">阿拉伯语 العربية</option>
+              </select>
+            </div>
+            <div class="lang-arrow">⇄</div>
+            <div class="lang-box">
+              <span class="lang-label">你的语言</span>
+              <select id="targetLang" class="lang-select" disabled>
+                <option value="zh">中文</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-section">
+          <label class="setup-label">
+            语音播报
+            <span class="setup-hint">你说中文时，自动用外语播报给对方</span>
+          </label>
+          <div class="toggle-row">
+            <span>开启中文→外语语音播报</span>
+            <label class="switch">
+              <input type="checkbox" id="enableTTS" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setup-section">
+          <label class="setup-label">行业术语（可选）</label>
+          <textarea id="glossaryInput" class="setup-textarea" rows="3" placeholder="每行一个术语，格式：原文=译文&#10;例如：&#10;nic salt=尼古丁盐&#10;pod system=换弹式设备&#10;TPD=烟草产品指令"></textarea>
+        </div>
+      </div>
+
+      <button id="btnStart" class="btn-primary btn-large">
+        🎙 开始会议
+      </button>
+
+      <div class="history-section">
+        <div class="history-header">
+          <span>📋 历史会议</span>
+          <button id="btnRefreshHistory" class="btn-text">刷新</button>
+        </div>
+        <div id="historyList" class="history-list">
+          <div class="history-empty">暂无历史会议</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 会议中 ===== -->
+    <div id="view-meeting" class="view">
+      <div class="meeting-header">
+        <div class="meeting-status">
+          <span id="recordingDot" class="recording-dot"></span>
+          <span id="meetingTimer">00:00</span>
+        </div>
+        <div id="meetingTitleDisplay" class="meeting-title">会议中</div>
+        <button id="btnEndMeeting" class="btn-end">结束</button>
+      </div>
+
+      <!-- 说话人切换 -->
+      <div class="speaker-toggle">
+        <button id="btnSpeakerAuto" class="speaker-btn auto-btn" data-speaker="auto">
+          🤖 自动
+        </button>
+        <button id="btnSpeakerOther" class="speaker-btn active" data-speaker="other">
+          🗣 对方
+        </button>
+        <button id="btnSpeakerMe" class="speaker-btn" data-speaker="me">
+          🎙 我
+        </button>
+      </div>
+      <div class="speaker-hint">
+        💡 「自动」模式会根据说话内容自动切换语言方向
+      </div>
+
+      <!-- 音量指示器 -->
+      <div class="volume-meter">
+        <div class="volume-bar" id="volumeBar"></div>
+        <span class="volume-label" id="volumeLabel">麦克风正常</span>
+      </div>
+
+      <!-- 双语字幕区 -->
+      <div class="subtitle-area">
+        <div id="subtitleSource" class="subtitle-line source">
+          <span class="subtitle-tag">原文</span>
+          <span class="subtitle-text" id="sourceText">等待对方说话...</span>
+        </div>
+        <div id="subtitleTarget" class="subtitle-line target">
+          <span class="subtitle-tag">译文</span>
+          <span class="subtitle-text" id="targetText"></span>
+        </div>
+      </div>
+
+      <!-- 已完成的对话记录 -->
+      <div class="transcript-scroll" id="transcriptScroll">
+        <div id="transcriptList" class="transcript-list"></div>
+      </div>
+
+      <!-- 底部控制栏 -->
+      <div class="meeting-controls">
+        <button id="btnMark" class="ctrl-btn">
+          ⭐<span>标记重点</span>
+        </button>
+        <button id="btnPause" class="ctrl-btn">
+          ⏸<span>暂停</span>
+        </button>
+        <button id="btnMute" class="ctrl-btn">
+          🔇<span>静音</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== 会议结果 / 纪要 ===== -->
+    <div id="view-result" class="view">
+      <div class="result-header">
+        <button id="btnBackHome" class="btn-back">← 返回</button>
+        <div class="result-title">会议纪要</div>
+        <div style="width:60px"></div>
+      </div>
+
+      <div class="result-info">
+        <div id="resultMeetingName" class="result-name"></div>
+        <div id="resultMeta" class="result-meta"></div>
+      </div>
+
+      <div class="result-actions">
+        <button id="btnGenerateSummary" class="btn-primary">
+          ✨ 生成AI纪要
+        </button>
+        <button id="btnExport" class="btn-secondary">
+          📥 导出记录
+        </button>
+      </div>
+
+      <div id="summaryLoading" class="loading-box" style="display:none">
+        <div class="spinner"></div>
+        <span>AI正在生成会议纪要，请稍候...</span>
+      </div>
+
+      <div id="summaryContent" class="summary-content" style="display:none"></div>
+
+      <div class="transcript-section">
+        <div class="section-title">📝 双语完整记录</div>
+        <div id="resultTranscript" class="result-transcript"></div>
+      </div>
+    </div>
+
+    <!-- ===== Toast 提示 ===== -->
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

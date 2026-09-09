@@ -1,10 +1,11 @@
 {
   "name": "meetlingo-mvp",
   "version": "0.1.0",
-  "description": "MeetLingo MVP",
+  "description": "MeetLingo MVP - 面对面会议同传+双语记录+AI纪要",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "dependencies": {
     "express": "^4.18.2",
