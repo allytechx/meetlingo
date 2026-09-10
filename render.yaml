@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: meetbuddy
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: VOLC_ACCESS_TOKEN
+        sync: false
+      - key: ARK_API_KEY
+        sync: false
+      - key: ARK_MODEL_ENDPOINT_ID
+        sync: false
+    healthCheckPath: /api/health
+    autoDeploy: true

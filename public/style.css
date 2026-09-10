@@ -1,0 +1,635 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+  min-height: 100vh;
+}
+
+#app {
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #fff;
+  position: relative;
+}
+
+.view {
+  display: none;
+  min-height: 100vh;
+}
+
+.view.active {
+  display: block;
+}
+
+/* ===== 首页 ===== */
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 40px 20px 30px;
+  text-align: center;
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.setup-card {
+  padding: 20px;
+}
+
+.setup-section {
+  margin-bottom: 20px;
+}
+
+.setup-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.setup-hint {
+  font-weight: normal;
+  font-size: 12px;
+  color: #999;
+  margin-left: 8px;
+}
+
+.setup-input,
+.lang-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.setup-input:focus,
+.lang-select:focus {
+  border-color: #667eea;
+}
+
+.lang-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lang-box {
+  flex: 1;
+}
+
+.lang-label {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.lang-arrow {
+  font-size: 20px;
+  color: #999;
+  margin-top: 18px;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 26px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #667eea;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: block;
+  width: calc(100% - 40px);
+  margin: 0 20px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-large {
+  padding: 16px 24px;
+  font-size: 18px;
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #555;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #e0e0e0;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+/* ===== 历史会议 ===== */
+
+.history-section {
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.history-header span {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.history-list {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+  min-height: 60px;
+}
+
+.history-empty {
+  text-align: center;
+  color: #999;
+  font-size: 13px;
+  padding: 20px;
+}
+
+.history-item {
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.history-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.history-meta {
+  font-size: 12px;
+  color: #999;
+}
+
+/* ===== 会议中 ===== */
+
+.meeting-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.meeting-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.recording-dot {
+  width: 10px;
+  height: 10px;
+  background: #ff4757;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.meeting-title {
+  font-size: 15px;
+  font-weight: 500;
+  flex: 1;
+  text-align: center;
+  margin: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-end {
+  background: #ff4757;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.speaker-toggle {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+}
+
+.speaker-btn {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #ddd;
+  background: white;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.speaker-btn.active {
+  border-color: #667eea;
+  background: #f0f2ff;
+  color: #667eea;
+}
+
+.speaker-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  padding: 0 20px 12px;
+}
+
+.volume-meter {
+  margin: 0 20px 16px;
+  background: #f0f0f0;
+  border-radius: 20px;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.volume-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 20px;
+  transition: width 0.1s;
+  width: 0%;
+}
+
+.volume-label {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11px;
+  color: #999;
+}
+
+/* ===== 字幕区 ===== */
+
+.subtitle-area {
+  padding: 16px 20px;
+  background: #f8f9fa;
+  margin: 20px 0 0;
+}
+
+.subtitle-line {
+  margin-bottom: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.subtitle-line:last-child {
+  margin-bottom: 0;
+}
+
+.subtitle-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  height: fit-content;
+  margin-top: 2px;
+}
+
+.subtitle-line.source .subtitle-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.subtitle-line.target .subtitle-tag {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.subtitle-text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* ===== 对话记录 ===== */
+
+.transcript-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.transcript-item {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.transcript-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.transcript-source {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.transcript-target {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* ===== 底部控制栏 ===== */
+
+.meeting-controls {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background: white;
+  border-top: 1px solid #eee;
+  position: sticky;
+  bottom: 0;
+}
+
+.ctrl-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.ctrl-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+/* ===== 结果页 ===== */
+
+.result-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-back {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.result-title {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.result-info {
+  padding: 20px;
+  text-align: center;
+}
+
+.result-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.result-meta {
+  font-size: 13px;
+  color: #999;
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px 20px;
+}
+
+.result-actions .btn-primary {
+  width: auto;
+  flex: 1;
+  margin: 0;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: #999;
+  font-size: 14px;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #f0f0f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.summary-content {
+  padding: 20px;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.summary-content h2 {
+  font-size: 16px;
+  margin: 20px 0 10px;
+  color: #333;
+  border-left: 3px solid #667eea;
+  padding-left: 10px;
+}
+
+.summary-content ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.summary-content li {
+  margin-bottom: 6px;
+}
+
+.transcript-section {
+  padding: 20px;
+  border-top: 8px solid #f5f7fa;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.result-transcript {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+/* ===== Toast ===== */
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 1000;
+  transition: transform 0.3s;
+  max-width: 90%;
+  text-align: center;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
